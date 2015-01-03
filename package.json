@@ -1,0 +1,22 @@
+{
+  "name": "sum-by-date-slab",
+  "version": "1.0.0",
+  "description": "sum by date processing slab",
+  "main": "process/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benbrunton/sum-by-date-slab.git"
+  },
+  "author": "ben@slabs.io",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benbrunton/sum-by-date-slab/issues"
+  },
+  "homepage": "https://github.com/benbrunton/sum-by-date-slab",
+  "dependencies": {
+    "q": "^1.1.2"
+  }
+}

@@ -1,6 +1,6 @@
 {
-	"name" : "sum by date slab",
+	"name" : "aggregate slab",
 	"type" : "processing",
-	"connectionsIn" : 1,
+	"connectionsIn" : 2,
 	"connectionsOut" : 1
 }

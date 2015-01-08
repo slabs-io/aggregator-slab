@@ -4,7 +4,7 @@
   "description": "aggregator processing slab",
   "main": "process/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node node_modules/.bin/jasmine-node ./spec"
   },
   "repository": {
     "type": "git",
@@ -14,5 +14,8 @@
   "license": "MIT",
   "dependencies": {
     "q": "^1.1.2"
+  },
+  "devDependencies": {
+    "jasmine-node": "^1.14.5"
   }
 }

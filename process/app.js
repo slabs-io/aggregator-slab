@@ -10,8 +10,6 @@ var Q = require('q');
 exports.process = function(input){
 
 	var deferred = Q.defer();
-
-	var matchingCategory = input.data[0].categories[0];
 	var categories = getCategories(input.data);
 
 	deferred.resolve({
@@ -19,55 +17,94 @@ exports.process = function(input){
 		dateTo: getLastDate(input.data),
 		categories: categories,
 		series: getSeries(input.data),
-		data: aggregate(input.data, matchingCategory)
+		data: aggregate(input.data)
 	});
 
 	return deferred.promise;
 };
 
-function aggregate(data, category){
-	return data.map(restructureData(category)).reduce(flatten);
+/**
+ * returns a data array combining all sources
+ * @private
+ * @param data
+ * @returns {[{object}]}
+ */
+function aggregate(data){
+	return data.map(restructureData).reduce(flatten);
 }
 
+/**
+ * loops through each dateFrom and returns lowest
+ * @private
+ * @param data
+ * @returns {number}
+ */
 function getEarliestDate(data){
-	var allDates = data.map(function(d){
+	return Math.min.apply(null, data.map(function(d){
 		return d.dateFrom;
-	});
-	return Math.min.apply(null, allDates);
+	}));
 }
 
+/**
+ * loops through each dateTo and returns highest
+ * @private
+ * @param data
+ * @returns {number}
+ */
 function getLastDate(data){
-	var allDates = data.map(function(d){
+	return Math.max.apply(null, data.map(function(d){
 		return d.dateTo;
-	});
-	return Math.max.apply(null, allDates);
+	}));
 }
 
+/**
+ * creates a flat array of all source categories
+ * @private
+ * @param data
+ * @returns {*}
+ */
 function getCategories(data){
-	return data.map(function(d, i){
+	return mapReduce(data, function(d, i){
 		return d.categories.map(function(cat){
 			return cat + ':' + i;
 		})
-	}).reduce(flatten);
+	});
 }
 
+/**
+ * creates a flat array of all source series
+ * @private
+ * @param data
+ * @returns {*}
+ */
 function getSeries(data){
-	return data.map(function(d){
+	return mapReduce(data, function(d){
 		return d.series;
-	}).reduce(flatten);
+	});
 }
 
 
 // utils
 
-// iterate over each dataset
-function restructureData(category){
-	return function(d, i){
-		return d.data.map(updateCategory(category, i));
-	};
+/**
+ * iterates through each data item in a source's 'data' array
+ * @private
+ * @param data
+ * @param {number} i
+ * @returns {Array}
+ */
+function restructureData(data, i){
+	var category = data.categories[0];
+	return data.data.map(updateCategory(category, i));
 }
 
-// iterate over each data item
+/**
+ * updates the data item to reflect updated category
+ * @private
+ * @param category
+ * @param i
+ * @returns {Function}
+ */
 function updateCategory(category, i){
 	return function(data){
 		data[category + ':' + i] = data[category];
@@ -76,6 +113,25 @@ function updateCategory(category, i){
 	}
 }
 
+/**
+ * takes an array of arrays - maps and flattens
+ * @private
+ * @param arr
+ * @param map
+ * @returns {*}
+ */
+function mapReduce(arr, map){
+	return arr.map(map).reduce(flatten);
+}
+
+/**
+ * for use with Array.prototype.reduce
+ * reduces array of array into flat array
+ * @private
+ * @param a {Array.<T>}
+ * @param b {Array.<T>}
+ * @returns {Array.<T>}
+ */
 function flatten(a, b){
 	return a.concat(b);
 }

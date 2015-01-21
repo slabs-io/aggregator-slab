@@ -1,28 +1,32 @@
 /* globals describe:false, it:false, expect:false */
 
 /*
-    {
-        values: ['mentions_17283728', 'mentions_17283729' ],
-        categories: ['18/01/2015', '19/01/2015', '20/01/2015'],
-        labels: {
-            'mentions_17283728':'"hate" on the dailymail.co.uk',
-            'mentions_17283729':'"terror" on the dailymail.co.uk'
+    [
+        {
+            result: {
+                mentions: 0
+            },
+            labels: {"mentions":"arb_label"}
         },
-        data: [
-            {
-                'mentions_17283728' : 131,
-                'mentions_17283729' : 94
+        {
+            result: {
+                mentions: 1
             },
-            {
-                'mentions_17283728' : 130,
-                'mentions_17283729' : 35
-            },
-            {
-                'mentions_17283728': 33,
-                'mentions_17283729' : 93
-            }
-        ]
-    };
+            labels: {"mentions":"arb_label2"}
+        }
+    ]
+
+    to
+
+    {
+        result: {
+            "0mentions": 0,
+            "1mentions":1
+        },
+        labels:{
+            "0mentions":"arb_label",
+            "1mentions":"arb_label2"
+        }
 
  */
 
@@ -46,23 +50,31 @@ describe('aggregator', function(){
     it('returns a promise', function(){
         var input = {
             settings: {},
-            data: [{
-                values: [],
-                categories: [],
-                labels: {},
-                data: []
-            }]
+            data: [{}]
         };
         expect(aggregator.process(input).then).toBeDefined();
+    });
+
+    it('the promise sends an object', function(done){
+        var input = {
+            settings: {},
+            data: [{}]
+        };
+
+        aggregator.process(input).then(function(data){
+            // object hack
+            expect(data.length).not.toBeDefined();
+            expect(typeof data).toEqual('object');
+            done();
+        });
+
     });
 
 
     it('returns the original data when there is only one set', function(done){
         var expected = {
-            values: [],
-            categories: [],
-            labels: {},
-            data: []
+            result:{},
+            labels:[]
         };
 
         var input = {
@@ -76,54 +88,33 @@ describe('aggregator', function(){
 
     it('combines data', function(done){
         var expected = {
-            values: ['mentions', 'tweets'],
-            categories: ['18/01/2015', '19/01/2015'],
-            labels: {
-                'mentions' : '"hate" on the dailymail.co.uk',
-                'tweets' : 'tweets containing "hate"'
+            result: {
+                "0mentions": 10,
+                "1mentions": 25
             },
-            data: [
-                {
-                    mentions: 10,
-                    tweets: 200
-                },
-                {
-                    mentions: 25,
-                    tweets: 120
-                }
-            ]
+            labels: {
+                "0mentions": "mentions1",
+                "1mentions": "mentions2"
+            }
         };
 
         var startingData = [
             {
-                values: ['mentions'],
-                categories: ['18/01/2015', '19/01/2015'],
-                labels: {
-                    'mentions' : '"hate" on the dailymail.co.uk'
+                result: {
+                    mentions: 10
                 },
-                data: [
-                    {
-                        mentions: 10
-                    },
-                    {
-                        mentions: 25
-                    }
-                ]
+                labels:{
+                    mentions: "mentions1"
+                }
             },
             {
-                values: ['tweets'],
-                categories: ['18/01/2015', '19/01/2015'],
-                labels: {
-                    'tweets' : 'tweets containing "hate"'
+                result:{
+                    mentions: 25
                 },
-                data: [
-                    {
-                        tweets: 200
-                    },
-                    {
-                        tweets: 120
-                    }
-                ]
+                labels:{
+                    mentions: "mentions2"
+                }
+
             }
         ];
 

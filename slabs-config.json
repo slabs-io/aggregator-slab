@@ -1,6 +1,6 @@
 {
 	"name" : "aggregate slab",
-	"type" : "processing",
+	"type" : "utility",
 	"connectionsIn" : 2,
 	"connectionsOut" : 1
 }

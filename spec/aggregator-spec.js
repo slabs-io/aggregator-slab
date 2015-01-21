@@ -2,19 +2,27 @@
 
 /*
     {
-        dateFrom    : '1416654884000',
-        dateTo      : '1417000484000',
-        categories  : ['date'],
-        series      : ['tweets'],
-        data        : [
-            {date : '21/11/2014', tweets: '15'},
-            {date : '22/11/2014', tweets: '10'},
-            {date : '23/11/2014', tweets: '8'},
-            {date : '24/11/2014', tweets: '25'},
-            {date : '25/11/2014', tweets: '18'},
-            {date : '26/11/2014', tweets: '4'}
+        values: ['mentions_17283728', 'mentions_17283729' ],
+        categories: ['18/01/2015', '19/01/2015', '20/01/2015'],
+        labels: {
+            'mentions_17283728':'"hate" on the dailymail.co.uk',
+            'mentions_17283729':'"terror" on the dailymail.co.uk'
+        },
+        data: [
+            {
+                'mentions_17283728' : 131,
+                'mentions_17283729' : 94
+            },
+            {
+                'mentions_17283728' : 130,
+                'mentions_17283729' : 35
+            },
+            {
+                'mentions_17283728': 33,
+                'mentions_17283729' : 93
+            }
         ]
-    }
+    };
 
  */
 
@@ -39,11 +47,10 @@ describe('aggregator', function(){
         var input = {
             settings: {},
             data: [{
-                dateFrom: 0,
-                dateTo: 0,
+                values: [],
                 categories: [],
-                series: [],
-                data:[]
+                labels: {},
+                data: []
             }]
         };
         expect(aggregator.process(input).then).toBeDefined();
@@ -51,80 +58,78 @@ describe('aggregator', function(){
 
 
     it('returns the original data when there is only one set', function(done){
-        var originalData = {
-            dateFrom: 0,
-            dateTo: 100,
-            categories: ['foo'],
-            series: ['bar'],
-            data:[
-                {foo: 1, bar: 2},
-                {foo: 2, bar: 3}
-            ]
-        };
-
-        var expectedData = {
-            dateFrom: 0,
-            dateTo: 100,
-            categories: ['foo:0'],
-            series: ['bar'],
-            data:[
-                {'foo:0': 1, bar: 2},
-                {'foo:0': 2, bar: 3}
-            ]
+        var expected = {
+            values: [],
+            categories: [],
+            labels: {},
+            data: []
         };
 
         var input = {
-            settings: {
-                category:null
-            },
-            data: [originalData]
+            settings: {},
+            data: [expected]
         };
 
-        check(input, expectedData, done);
+        check(input, expected, done);
 
     });
 
-    it('combines data when there is a common category', function(done){
-        var set1 = {
-            dateFrom: 0,
-            dateTo: 100,
-            categories: ['cat'],
-            series: ['foo'],
-            data:[
-                {cat: 1, foo: 2},
-                {cat: 2, foo: 3}
-            ]
-        };
-
-        var set2 = {
-            dateFrom: 150,
-            dateTo: 200,
-            categories: ['cat'],
-            series: ['bar'],
-            data:[
-                {cat: 3, bar: 5},
-                {cat: 4, bar: 6}
-            ]
-        };
-
+    it('combines data', function(done){
         var expected = {
-            dateFrom: 0,
-            dateTo: 200,
-            categories: ['cat:0', 'cat:1'],
-            series: ['foo', 'bar'],
-            data:[
-                {'cat:0': 1, foo: 2},
-                {'cat:0': 2, foo: 3},
-                {'cat:1': 3, bar: 5},
-                {'cat:1': 4, bar: 6}
+            values: ['mentions', 'tweets'],
+            categories: ['18/01/2015', '19/01/2015'],
+            labels: {
+                'mentions' : '"hate" on the dailymail.co.uk',
+                'tweets' : 'tweets containing "hate"'
+            },
+            data: [
+                {
+                    mentions: 10,
+                    tweets: 200
+                },
+                {
+                    mentions: 25,
+                    tweets: 120
+                }
             ]
         };
+
+        var startingData = [
+            {
+                values: ['mentions'],
+                categories: ['18/01/2015', '19/01/2015'],
+                labels: {
+                    'mentions' : '"hate" on the dailymail.co.uk'
+                },
+                data: [
+                    {
+                        mentions: 10
+                    },
+                    {
+                        mentions: 25
+                    }
+                ]
+            },
+            {
+                values: ['tweets'],
+                categories: ['18/01/2015', '19/01/2015'],
+                labels: {
+                    'tweets' : 'tweets containing "hate"'
+                },
+                data: [
+                    {
+                        tweets: 200
+                    },
+                    {
+                        tweets: 120
+                    }
+                ]
+            }
+        ];
 
         var input = {
-            settings: {
-                category:null
-            },
-            data: [set1, set2]
+            settings: {},
+            data: startingData
         };
 
         check(input, expected, done);

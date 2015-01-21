@@ -10,108 +10,56 @@ var Q = require('q');
 exports.process = function(input){
 
 	var deferred = Q.defer();
-	var categories = getCategories(input.data);
+
+	var values = {};
+
+	if(input.data[0]){
+		values = mapReduce(input.data, function(item){
+			return item.values;
+		});
+	}
+
+	var labels = {};
+	input.data.forEach(function(item){
+		Object.keys(item.labels).forEach(function(label){
+			labels[label] = item.labels[label];
+		});
+	});
+
+	var seperateData = input.data.map(function(item){
+		return item.data;
+	});
+
+	var catLength = input.data[0] ? input.data[0].data.length : 0;
+	var i;
+
+	var data = [];
+	for(i = 0; i < catLength; i++){
+		var d = {};
+		seperateData.forEach(function(datum){
+			var dat = datum[i];
+			Object.keys(dat).forEach(function(key){
+				d[key] = dat[key];
+			});
+		});
+		data.push(d);
+	}
+
 
 	deferred.resolve({
-		dateFrom: getEarliestDate(input.data),
-		dateTo: getLastDate(input.data),
-		categories: categories,
-		series: getSeries(input.data),
-		data: aggregate(input.data)
+		values: values,
+		categories: input.data[0] ? input.data[0].categories : [],
+		labels: labels,
+		data: data
 	});
 
 	return deferred.promise;
 };
 
-/**
- * returns a data array combining all sources
- * @private
- * @param data
- * @returns {[{object}]}
- */
-function aggregate(data){
-	return data.map(restructureData).reduce(flatten);
-}
-
-/**
- * loops through each dateFrom and returns lowest
- * @private
- * @param data
- * @returns {number}
- */
-function getEarliestDate(data){
-	return Math.min.apply(null, data.map(function(d){
-		return d.dateFrom;
-	}));
-}
-
-/**
- * loops through each dateTo and returns highest
- * @private
- * @param data
- * @returns {number}
- */
-function getLastDate(data){
-	return Math.max.apply(null, data.map(function(d){
-		return d.dateTo;
-	}));
-}
-
-/**
- * creates a flat array of all source categories
- * @private
- * @param data
- * @returns {*}
- */
-function getCategories(data){
-	return mapReduce(data, function(d, i){
-		return d.categories.map(function(cat){
-			return cat + ':' + i;
-		})
-	});
-}
-
-/**
- * creates a flat array of all source series
- * @private
- * @param data
- * @returns {*}
- */
-function getSeries(data){
-	return mapReduce(data, function(d){
-		return d.series;
-	});
-}
 
 
 // utils
 
-/**
- * iterates through each data item in a source's 'data' array
- * @private
- * @param data
- * @param {number} i
- * @returns {Array}
- */
-function restructureData(data, i){
-	var category = data.categories[0];
-	return data.data.map(updateCategory(category, i));
-}
-
-/**
- * updates the data item to reflect updated category
- * @private
- * @param category
- * @param i
- * @returns {Function}
- */
-function updateCategory(category, i){
-	return function(data){
-		data[category + ':' + i] = data[category];
-		delete data[category];
-		return data;
-	}
-}
 
 /**
  * takes an array of arrays - maps and flattens

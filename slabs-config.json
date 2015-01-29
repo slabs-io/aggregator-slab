@@ -1,5 +1,5 @@
 {
-	"name" : "aggregate slab",
+	"name" : "Aggregator",
 	"type" : "utility",
 	"connectionsIn" : 2,
 	"connectionsOut" : 1

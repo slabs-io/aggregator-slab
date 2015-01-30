@@ -1,6 +1,13 @@
 {
 	"name" : "Aggregator",
+  	"description" : "A tool for mashing data together",
 	"type" : "utility",
-	"connectionsIn" : 2,
-	"connectionsOut" : 1
+	"connectionsIn" : -1,
+	"connectionsOut" : 1,
+	"schema" : {
+	},
+	"source": {
+	  "label": "Core Slab",
+	  "url": "http://slabs.io/"
+	}
 }

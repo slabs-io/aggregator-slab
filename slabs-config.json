@@ -4,6 +4,7 @@
 	"type" : "utility",
 	"connectionsIn" : -1,
 	"connectionsOut" : 1,
+  	"customIcon" : "fa-compress",
 	"schema" : {
 	},
 	"source": {

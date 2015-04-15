@@ -1,14 +1,15 @@
 {
-	"name" : "Aggregator",
-  	"description" : "A tool for mashing data together",
-	"type" : "utility",
-	"connectionsIn" : -1,
-	"connectionsOut" : 1,
-  	"customIcon" : "fa-compress",
-	"schema" : {
-	},
-	"source": {
-	  "label": "Core Slab",
-	  "url": "http://slabs.io/"
-	}
+  "name": "Aggregator",
+  "description": "A tool for mashing data together",
+  "type": "utility",
+  "connectionsIn": -1,
+  "connectionsOut": 1,
+  "customIcon": "fa-compress",
+  "hasSettings": true,
+  "schema": {
+  },
+  "source": {
+    "label": "Core Slab",
+    "url": "http://slabs.io/"
+  }
 }

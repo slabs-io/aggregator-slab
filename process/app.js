@@ -1,34 +1,27 @@
 "use strict";
 
-var Q = require('q');
+var Q = require('q'),
+    _ = require('lodash');
 
 /**
  * process takes an array of data sources and returns a flat array of data
  * @param input {object} input settings and input data
  * @returns {object}
  */
-exports.process = function(input){
+exports.process = function (input) {
 
-	var deferred = Q.defer();
+    var deferred = Q.defer();
 
-	var data = {
-		result:{},
-		labels:{}
-	};
+    var data = input.data;
+    var settings = input.settings;
 
-	input.data.forEach(function(datum, i){
-		if(datum.result === undefined || datum.labels === undefined){
-			return;
-		}
+    var returnData = [];
 
-		Object.keys(datum.result).forEach(function(key){
-			data.result[i + key] = datum.result[key];
-			data.labels[i + key] = datum.labels[key];
-		});
+    _.each(data, function(datum){
+        returnData = returnData.concat(datum);
+    });
 
-	});
+    deferred.resolve(returnData);
 
-	deferred.resolve(data);
-
-	return deferred.promise;
+    return deferred.promise;
 };

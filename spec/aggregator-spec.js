@@ -1,43 +1,43 @@
 /* globals describe:false, it:false, expect:false */
 
 /*
-    [
-        {
-            result: {
-                mentions: 0
-            },
-            labels: {"mentions":"arb_label"}
-        },
-        {
-            result: {
-                mentions: 1
-            },
-            labels: {"mentions":"arb_label2"}
-        }
-    ]
+ [
+ {
+ result: {
+ mentions: 0
+ },
+ labels: {"mentions":"arb_label"}
+ },
+ {
+ result: {
+ mentions: 1
+ },
+ labels: {"mentions":"arb_label2"}
+ }
+ ]
 
-    to
+ to
 
-    {
-        result: {
-            "0mentions": 0,
-            "1mentions":1
-        },
-        labels:{
-            "0mentions":"arb_label",
-            "1mentions":"arb_label2"
-        }
+ {
+ result: {
+ "0mentions": 0,
+ "1mentions":1
+ },
+ labels:{
+ "0mentions":"arb_label",
+ "1mentions":"arb_label2"
+ }
 
  */
 
-function deepEqual(actual, expected){
-    Object.keys(actual).forEach(function(key){
+function deepEqual(actual, expected) {
+    Object.keys(actual).forEach(function (key) {
         expect(actual[key]).toEqual(expected[key]);
     });
 }
 
-function check(input, expected, done){
-    aggregator.process(input).then(function(data){
+function check(input, expected, done) {
+    aggregator.process(input).then(function (data) {
         deepEqual(data, expected);
         done();
     });
@@ -45,9 +45,9 @@ function check(input, expected, done){
 
 var aggregator = require('../process/app');
 
-describe('aggregator', function(){
+describe('aggregator', function () {
 
-    it('returns a promise', function(){
+    it('returns a promise', function () {
         var input = {
             settings: {},
             data: [{}]
@@ -55,13 +55,13 @@ describe('aggregator', function(){
         expect(aggregator.process(input).then).toBeDefined();
     });
 
-    it('the promise sends an object', function(done){
+    it('the promise sends an object', function (done) {
         var input = {
             settings: {},
             data: [{}]
         };
 
-        aggregator.process(input).then(function(data){
+        aggregator.process(input).then(function (data) {
             // object hack
             expect(data.length).not.toBeDefined();
             expect(typeof data).toEqual('object');
@@ -71,10 +71,10 @@ describe('aggregator', function(){
     });
 
 
-    it('returns the original data when there is only one set', function(done){
+    it('returns the original data when there is only one set', function (done) {
         var expected = {
-            result:{},
-            labels:[]
+            result: {},
+            labels: []
         };
 
         var input = {
@@ -86,7 +86,7 @@ describe('aggregator', function(){
 
     });
 
-    it('combines data', function(done){
+    it('combines data', function (done) {
         var expected = {
             result: {
                 "0mentions": 10,
@@ -103,15 +103,15 @@ describe('aggregator', function(){
                 result: {
                     mentions: 10
                 },
-                labels:{
+                labels: {
                     mentions: "mentions1"
                 }
             },
             {
-                result:{
+                result: {
                     mentions: 25
                 },
-                labels:{
+                labels: {
                     mentions: "mentions2"
                 }
 

@@ -5,7 +5,7 @@
   "connectionsIn": -1,
   "connectionsOut": 1,
   "customIcon": "fa-compress",
-  "hasSettings": true,
+  "hasSettings": false,
   "schema": {
   },
   "source": {

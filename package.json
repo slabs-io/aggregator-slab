@@ -1,14 +1,14 @@
 {
-  "name": "aggregate-slab",
+  "name": "join-slab",
   "version": "1.0.0",
-  "description": "aggregator processing slab",
+  "description": "join util slab",
   "main": "process/app.js",
   "scripts": {
     "test": "node node_modules/.bin/jasmine-node ./spec"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/benbrunton/aggregate-slab.git"
+    "url": "https://github.com/benbrunton/join-slab.git"
   },
   "author": "ben@slabs.io",
   "license": "MIT",
